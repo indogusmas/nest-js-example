@@ -4,7 +4,6 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ArticleEntity } from './entities/article.entity';
-import { PageMetaDto } from 'src/utils/pagemetadto';
 
 @Controller('articles')
 @ApiTags('articles')
@@ -22,10 +21,19 @@ export class ArticlesController {
   @Get()
   @ApiOkResponse({ type: ArticleEntity, isArray: true })
   async findAll() {
-  
-    const articles = await this.articlesService.findAll({where : '{}', orderBy: 'ASC', page: 1});
-    console.log(articles.data);
-    return articles.data.map((article) => new ArticleEntity(article))
+    const articles = await this.articlesService.findAll({
+        where: {},
+        orderBy: {createdAt: 'asc'},
+        page: 1,
+        include: {autor:true}
+      }
+      );
+   // const articles2 = await this.articlesService.findAllv2();
+    console.log(articles);
+   // const temp =  articles.data.map((article) => new ArticleEntity(article))
+
+   // console.log(temp);
+    return articles;
   }
 
   @Get('draft')

@@ -6,7 +6,6 @@ import { PaginateFunction, PaginateResult, paginator } from 'src/paginate/pagina
 import { ArticleEntity } from './entities/article.entity';
 import { Prisma } from '@prisma/client';
 
-const paginate : PaginateFunction = paginator({perPage: 10});
 
 @Injectable()
 export class ArticlesService {
@@ -16,21 +15,34 @@ export class ArticlesService {
     return this.prisma.article.create({data: createArticleDto});
   }
 
-  findAll({where,orderBy,page}:{
+  findAll({where,orderBy,page,include}:{
     where?: Prisma.ArticleWhereInput,
     orderBy?:Prisma.ArticleOrderByWithRelationInput,
-    page?:number
+    page?:number,
+    include?: Prisma.ArticleInclude,
   }):Promise<PaginateResult<ArticleEntity>> {
+    const paginate : PaginateFunction = paginator({perPage: 1,page: 1});
     return paginate(
       this.prisma.article,
+      page,
       {
         where,
-        orderBy
+        orderBy,
+        include,
       },
-      {
-        page
-      }
+      
     )
+  }
+
+  findAllv2(){
+    return this.prisma.article.findMany({
+      where: {
+        id: 2
+      },
+      include: {
+        autor: true
+      }
+    })
   }
 
   findOne(id: number) {
