@@ -21,7 +21,7 @@ export class ArticlesService {
     page?:number,
     include?: Prisma.ArticleInclude,
   }):Promise<PaginateResult<ArticleEntity>> {
-    const paginate : PaginateFunction = paginator({perPage: 1,page: 1});
+    const paginate : PaginateFunction = paginator({perPage: 10,page: 1});
     return paginate(
       this.prisma.article,
       page,

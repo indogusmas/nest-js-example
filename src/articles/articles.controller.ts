@@ -28,11 +28,6 @@ export class ArticlesController {
         include: {autor:true}
       }
       );
-   // const articles2 = await this.articlesService.findAllv2();
-    console.log(articles);
-   // const temp =  articles.data.map((article) => new ArticleEntity(article))
-
-   // console.log(temp);
     return articles;
   }
 

@@ -1,9 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthEntity } from './entities/auth.entity';
+import { RegisterDto } from './dto/register.dto';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
+import { CompareHash, HashingData } from 'src/utils/helper';
+import { RegisterEntity } from './entities/register.entity';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +24,7 @@ export class AuthService {
     }
 
     //check if the password is correct
-    const isPasswordValid = user.password === password;
+    const isPasswordValid = await CompareHash(user.password, password);
     //if not valid throw another error
     if(!isPasswordValid){
       throw new NotFoundException('Username or password invalid');
@@ -32,5 +35,24 @@ export class AuthService {
         userId: user.id
       })
     }  
+  }
+
+  async register(register: RegisterDto): Promise<RegisterEntity> {
+    const userExist = await this.prisma.user.findUnique({where: {email: register.email}});
+
+    if(userExist != null){
+      throw new ConflictException('User Already Exist!!');
+    }
+    //hashing Password
+    register.password = await HashingData(register.password);
+    const createdUser = await this.prisma.user.create({ data: register });
+    const userId = createdUser.id;
+    
+    return {
+     data: new UserEntity(createdUser),
+     access_token: this.jwtService.sign({
+      userId: userId
+     })
+    } 
   }
 }
