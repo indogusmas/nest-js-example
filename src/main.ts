@@ -10,6 +10,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({transform: true}));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   
+  
   const config = new DocumentBuilder()
       .setTitle('CRUD')
       .setDescription('Collection CRUD API')
