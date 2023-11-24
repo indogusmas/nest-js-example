@@ -6,6 +6,9 @@ import { ArticlesModule } from './articles/articles.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { join } from 'path';
+import { MailService } from './mail/mail/mail.service';
+import { MailModule } from './mail/mail/mail.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -13,6 +16,9 @@ import { join } from 'path';
     ArticlesModule,
     UsersModule,
     AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true
+    })
   ],
   controllers: [AppController],
   providers: [AppService],

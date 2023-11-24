@@ -6,6 +6,8 @@ import { PassportModule } from '@nestjs/passport';
 import {JwtModule} from '@nestjs/jwt';
 import { UsersModule } from 'src/users/users.module';
 import { JwtStrategy } from './jwt.strategy';
+import { MailModule } from 'src/mail/mail/mail.module';
+import { MailService } from 'src/mail/mail/mail.service';
 
 //should move to env
 export const jwtSecret = '13vfj131vnkjdnsaaqw';
@@ -19,8 +21,9 @@ export const jwtSecret = '13vfj131vnkjdnsaaqw';
       signOptions: { expiresIn: '5m'}
     }),
     UsersModule,
+    MailModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService,JwtStrategy],
+  providers: [AuthService,JwtStrategy,MailService],
 })
 export class AuthModule {}

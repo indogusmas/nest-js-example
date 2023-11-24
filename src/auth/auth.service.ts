@@ -7,12 +7,14 @@ import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { CompareHash, HashingData } from 'src/utils/helper';
 import { RegisterEntity } from './entities/register.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { MailService } from 'src/mail/mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private mailService: MailService,
   ){}
 
   async login(email: string,password: string): Promise<AuthEntity>{
@@ -29,6 +31,8 @@ export class AuthService {
     if(!isPasswordValid){
       throw new NotFoundException('Username or password invalid');
     }
+
+    await this.mailService.sendEmail('indosamudra7@gmail.com');
 
     return {
       accessToken: this.jwtService.sign({
