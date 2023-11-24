@@ -12,7 +12,7 @@
 3. Jw
 4. Bycrpt
 5. Pagination
-
+6. Versioning
 
 ## Installation
 

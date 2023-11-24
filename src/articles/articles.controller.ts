@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, Version } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -25,6 +25,19 @@ export class ArticlesController {
         where: {},
         orderBy: {createdAt: 'asc'},
         page: 1,
+        include: {autor:true}
+      }
+      );
+    return articles;
+  }
+  @Version('1')
+  @Get()
+  @ApiOkResponse({ type: ArticleEntity, isArray: true })
+  async findAllV2() {
+    const articles = await this.articlesService.findAll({
+        where: {},
+        orderBy: {createdAt: 'asc'},
+        page: 2,
         include: {autor:true}
       }
       );
