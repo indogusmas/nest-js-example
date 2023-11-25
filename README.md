@@ -19,6 +19,10 @@
 ```bash
 $ npm install
 
+#setup
+copy file env copy to .env
+set value in .env
+
 # run docker for postgree
 $ docker-compose up -d
 ```
